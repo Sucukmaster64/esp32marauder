@@ -67,47 +67,54 @@ void PwnagotchiDisplay::update(const PwnagotchiStats& wifi_stats) {
 
     // Clear display
     display->clearDisplay();
-    display->setTextSize(1);
     display->setTextColor(SSD1306_WHITE);
-    display->setCursor(0, 0);
 
-    // Top line: Current mood
-    switch (current_mood) {
-        case MOOD_HAPPY:
-            display->println("[:-)  HAPPY");
-            break;
-        case MOOD_EXCITED:
-            display->println("[o_o  EXCITED");
-            break;
-        case MOOD_SAD:
-            display->println("[:-( SAD");
-            break;
-        case MOOD_SLEEPING:
-            display->println("[-_- SLEEPING");
-            break;
-        case MOOD_IDLE:
-        default:
-            display->println("[... IDLE");
-            break;
-    }
+    // Draw pixel face (left side: columns 0-50)
+    drawSimpleFace();
 
-    display->println("");
-
-    // Display statistics
+    // Draw statistics on right side (columns 55+)
+    display->setTextSize(1);
+    display->setCursor(55, 0);
     display->print("CH:");
     display->println(wifi_stats.current_channel);
 
-    display->print("APs:");
+    display->setCursor(55, 10);
+    display->print("AP:");
     display->println(wifi_stats.total_aps);
 
-    display->print("Clients:");
+    display->setCursor(55, 20);
+    display->print("CL:");
     display->println(wifi_stats.total_clients);
 
-    display->print("Handshakes:");
+    display->setCursor(55, 30);
+    display->print("HS:");
     display->println(wifi_stats.total_handshakes);
 
-    display->print("Packets:");
+    display->setCursor(55, 40);
+    display->print("PKT:");
     display->println(wifi_stats.packets_received);
+
+    // Draw mood label below face
+    display->setTextSize(1);
+    display->setCursor(0, 50);
+    switch (current_mood) {
+        case MOOD_HAPPY:
+            display->println("HAPPY");
+            break;
+        case MOOD_EXCITED:
+            display->println("EXCITED");
+            break;
+        case MOOD_SAD:
+            display->println("SAD");
+            break;
+        case MOOD_SLEEPING:
+            display->println("SLEEP");
+            break;
+        case MOOD_IDLE:
+        default:
+            display->println("IDLE");
+            break;
+    }
 
     // Render to display
     display->display();
@@ -205,43 +212,127 @@ void PwnagotchiDisplay::setMood(MoodState mood) {
     current_mood = mood;
 }
 
-// Placeholder functions for pixel-based face drawing (Phase 3)
+// Pixel-based face drawing (Phase 3)
 void PwnagotchiDisplay::drawMoodHappy() {
-    // Will implement pixel faces in Phase 3
+    // Happy face: :-)
+    // Eyes at (20, 20) and (40, 20)
+    // Smile arc from (15, 35) to (45, 35)
+    if (!display) return;
+
+    // Draw eyes
+    display->fillRect(18, 18, 4, 4, SSD1306_WHITE);  // Left eye
+    display->fillRect(38, 18, 4, 4, SSD1306_WHITE);  // Right eye
+
+    // Draw smile (using horizontal line for simplicity)
+    for (int x = 15; x < 45; x++) {
+        int y = 25 + (x - 15) * (x - 45) / 900;  // Parabolic curve
+        display->drawPixel(x, y + 8, SSD1306_WHITE);
+    }
 }
 
 void PwnagotchiDisplay::drawMoodExcited() {
-    // Will implement pixel faces in Phase 3
+    // Excited face: o_o
+    // Large wide eyes, mouth open (O shape)
+    if (!display) return;
+
+    // Draw wide eyes
+    display->drawCircle(20, 20, 4, SSD1306_WHITE);   // Left eye (filled)
+    display->fillCircle(20, 20, 2, SSD1306_WHITE);
+    display->drawCircle(40, 20, 4, SSD1306_WHITE);   // Right eye (filled)
+    display->fillCircle(40, 20, 2, SSD1306_WHITE);
+
+    // Draw surprised mouth (circle)
+    display->drawCircle(30, 40, 5, SSD1306_WHITE);
+    display->fillCircle(30, 40, 3, SSD1306_WHITE);
 }
 
 void PwnagotchiDisplay::drawMoodSad() {
-    // Will implement pixel faces in Phase 3
+    // Sad face: :-(
+    // Eyes at (20, 20) and (40, 20)
+    // Sad mouth (inverted smile)
+    if (!display) return;
+
+    // Draw eyes
+    display->fillRect(18, 18, 4, 4, SSD1306_WHITE);  // Left eye
+    display->fillRect(38, 18, 4, 4, SSD1306_WHITE);  // Right eye
+
+    // Draw sad mouth (inverted parabola)
+    for (int x = 15; x < 45; x++) {
+        int y = 32 - (x - 15) * (x - 45) / 900;  // Inverted parabolic curve
+        display->drawPixel(x, y + 8, SSD1306_WHITE);
+    }
 }
 
 void PwnagotchiDisplay::drawMoodSleeping() {
-    // Will implement pixel faces in Phase 3
+    // Sleeping face: -_-
+    // Closed eyes (horizontal lines)
+    // Peaceful mouth (small line)
+    if (!display) return;
+
+    // Draw closed eyes
+    display->drawLine(16, 20, 24, 20, SSD1306_WHITE);  // Left eye (-)
+    display->drawLine(36, 20, 44, 20, SSD1306_WHITE);  // Right eye (-)
+
+    // Draw peaceful mouth
+    display->drawLine(20, 40, 40, 40, SSD1306_WHITE);
 }
 
 void PwnagotchiDisplay::drawMoodIdle() {
-    // Will implement pixel faces in Phase 3
+    // Idle face: ...
+    // Neutral eyes (dots)
+    // Neutral mouth (straight line)
+    if (!display) return;
+
+    // Draw neutral eyes (dots)
+    display->fillRect(19, 19, 2, 2, SSD1306_WHITE);   // Left eye
+    display->fillRect(39, 19, 2, 2, SSD1306_WHITE);   // Right eye
+
+    // Draw neutral mouth
+    display->drawLine(25, 38, 35, 38, SSD1306_WHITE);
 }
 
 void PwnagotchiDisplay::drawSimpleFace() {
-    // Will implement in Phase 3
+    // Draw face based on current mood
+    switch (current_mood) {
+        case MOOD_HAPPY:
+            drawMoodHappy();
+            break;
+        case MOOD_EXCITED:
+            drawMoodExcited();
+            break;
+        case MOOD_SAD:
+            drawMoodSad();
+            break;
+        case MOOD_SLEEPING:
+            drawMoodSleeping();
+            break;
+        case MOOD_IDLE:
+        default:
+            drawMoodIdle();
+            break;
+    }
 }
 
 void PwnagotchiDisplay::drawChannel(uint8_t channel) {
-    // Will implement in Phase 3
+    if (!display) return;
+    display->print("CH:");
+    display->println(channel);
 }
 
 void PwnagotchiDisplay::drawAPCount(uint32_t count) {
-    // Will implement in Phase 3
+    if (!display) return;
+    display->print("APs:");
+    display->println(count);
 }
 
 void PwnagotchiDisplay::drawClientCount(uint32_t count) {
-    // Will implement in Phase 3
+    if (!display) return;
+    display->print("Clients:");
+    display->println(count);
 }
 
 void PwnagotchiDisplay::drawHandshakeCount(uint32_t count) {
-    // Will implement in Phase 3
+    if (!display) return;
+    display->print("HS:");
+    display->println(count);
 }
