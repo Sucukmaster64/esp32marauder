@@ -8,7 +8,7 @@ PwnagotchiDisplay::PwnagotchiDisplay(uint8_t sda, uint8_t scl)
 PwnagotchiDisplay::~PwnagotchiDisplay() { deinit(); }
 
 void PwnagotchiDisplay::init() {
-    Wire.begin(sda_pin, scl_pin);
+    Wire.begin(sda_pin, scl_pin);  // SDA=12, SCL=13 — hardwired, not ESP32-S3 defaults
     delay(50);
 
     oled = new Adafruit_SSD1306(OLED_WIDTH, OLED_HEIGHT, &Wire, -1);

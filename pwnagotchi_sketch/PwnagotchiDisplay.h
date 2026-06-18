@@ -12,9 +12,9 @@
 #define OLED_HEIGHT  64
 #define OLED_ADDR  0x3C
 
-// I2C pins for ESP32-S3 SuperMini (XIAO)
-#define OLED_SDA 6
-#define OLED_SCL 7
+// Hardwired solder connections on this board — NOT the ESP32-S3 defaults (8/9)
+#define OLED_SDA 12
+#define OLED_SCL 13
 
 #define DISPLAY_UPDATE_MS 250
 
