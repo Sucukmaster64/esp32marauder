@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "RLChannelOptimizer.h"
 #include <math.h>
 #include <string.h>

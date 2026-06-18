@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "PwnagotchiWiFiCore.h"
 #include <WiFi.h>
 #include <string.h>
@@ -43,7 +44,7 @@ void PwnagotchiWiFiCore::init() {
 
     wifi_promiscuous_filter_t filt = {};
     // Mgmt frames (beacons, probes) + data frames (EAPOL handshakes)
-    filt.mask = WIFI_PROMISCUOUS_FILTER_MASK_MGMT | WIFI_PROMISCUOUS_FILTER_MASK_DATA;
+    filt.filter_mask = WIFI_PROMIS_FILTER_MASK_MGMT | WIFI_PROMIS_FILTER_MASK_DATA;
     esp_wifi_set_promiscuous_filter(&filt);
     esp_wifi_set_promiscuous_rx_cb(&_pwnCoreCallback);
     esp_wifi_set_promiscuous(true);

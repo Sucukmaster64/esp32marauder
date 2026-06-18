@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "PwnagotchiDisplay.h"
 
 PwnagotchiDisplay pwnagotchi_display;

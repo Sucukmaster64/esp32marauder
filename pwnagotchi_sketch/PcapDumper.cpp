@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "PcapDumper.h"
 
 PcapDumper pcap_dumper;

@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "WebUI.h"
 
 #ifdef ENABLE_WEBUI

@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "AllowlistManager.h"
 
 AllowlistManager allowlist;

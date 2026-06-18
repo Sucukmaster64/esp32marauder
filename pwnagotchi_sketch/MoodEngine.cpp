@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "MoodEngine.h"
 #include <string.h>
 
