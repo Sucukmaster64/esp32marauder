@@ -1,6 +1,9 @@
 /*
  * ESP32-S3 Pwnagotchi Clone
- * Target: XIAO ESP32-S3 + SSD1306 128x64 OLED (I2C: SDA=6, SCL=7)
+ * Target: XIAO ESP32-S3 + SSD1306 128x64 OLED (I2C: SDA=12, SCL=13 hardwired)
+ *
+ * Optional WebUI: add -DENABLE_WEBUI to compiler flags and install AsyncTCP lib.
+ * Connect to AP "pwnagotchi-clone" then open http://192.168.4.1
  */
 
 #include "PwnagotchiTypes.h"
@@ -10,6 +13,7 @@
 #include "RLChannelOptimizer.h"
 #include "PcapDumper.h"
 #include "AllowlistManager.h"
+#include "WebUI.h"
 
 #define CHANNEL_HOP_MS  100
 #define DISPLAY_UPDATE_MS 250
@@ -33,6 +37,10 @@ void setup() {
     pwnagotchi_display.init();
     wifi_core.startBeaconSniff();
     rl_optimizer.init();
+
+#ifdef ENABLE_WEBUI
+    web_ui.begin();
+#endif
 
     Serial.println(F("Ready. Type 'help' for commands."));
 }
